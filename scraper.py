@@ -3,13 +3,31 @@ import time
 import pandas as pd
 import requests
 
-START_URL = "https://en.wikipedia.org/wiki/List_of_brightest_stars_and_other_record_stars" 
-browser = webdriver.Chrome("D:/Setup/chromedriver_win32/chromedriver.exe") 
+
+
+START_URL = "https://en.wikipedia.org/wiki/List_of_brown_dwarfs" 
+browser = webdriver.Chrome("/Users/akshitas/Akshita/WhiteHatJr/Projects/Project 127") 
 browser.get(START_URL) time.sleep(10)
 
 scraped_data = []
 
-def scrape():
+def scrape_more_data(hyperlink):
+    try:
+        page = requests.get(hyperlink)
+        soup = BeautifulSoup(page.content, "html.parser")
+        temp_list = []
+
+        for tr_tag in soup.find_all("tr", attrs={"class": "fact_row"}):
+            td_tags = tr_tag.find_all("td")
+          
+            for td_tag in td_tags:
+                try: 
+                    temp_list.append(td_tag.find_all("div", attrs={"class": "value"})[0].contents[0])
+                except:
+                    temp_list.append("")
+            scraped_data.append(temp_list)
+
+
 
 bright_star_table = soup.find("table", attrs={"class", "wikitable"})
 
